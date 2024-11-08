@@ -1,0 +1,15 @@
+{
+    "name": "ahiou/cinetech_improve",
+    "autoload": {
+        "psr-4": {
+            "Ahiou\\CinetechImprove\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "abd-ellah hioun",
+            "email": "abd-ellah.hioun@laplateforme.io"
+        }
+    ],
+    "require": {}
+}
