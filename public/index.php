@@ -1,41 +1,20 @@
 <?php
-
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/config.php';
 
-use Ahiou\CinetechImprove\Controllers\MovieController;
+$controllerName = $_GET['controller'] ?? 'movie';
+$action = $_GET['action'] ?? 'index';
+$id = $_GET['id'] ?? null;
 
-$controller = new MovieController();
+$controllerClass = 'App\\Controllers\\' . ucfirst($controllerName) . 'Controller';
 
-$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
-switch ($path) {
-    case '/':
-        $controller->index();
-        break;
-    
-    case '/search':
-        $controller->search();
-        break;
-    
-    case '/api/favorite':
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = json_decode(file_get_contents('php://input'), true);
-            header('Content-Type: application/json');
-            echo json_encode($controller->toggleFavorite($data['movieId']));
-        }
-        break;
-    
-    case '/favorites':
-        $controller->favorites();
-        break;
-    
-    default:
-        if (preg_match('/^\/movie\/(\d+)$/', $path, $matches)) {
-            $controller->details($matches[1]);
-        } else {
-            http_response_code(404);
-            echo '404 Not Found';
-        }
-        break;
+if (class_exists($controllerClass)) {
+    $controller = new $controllerClass();
+    if (method_exists($controller, $action)) {
+        $id ? $controller->{$action}($id) : $controller->{$action}();
+    } else {
+        echo 'Action not found.';
+    }
+} else {
+    echo 'Controller not found.';
 }
