@@ -2,7 +2,7 @@
     "name": "ahiou/cinetech_improve",
     "autoload": {
         "psr-4": {
-            "Ahiou\\CinetechImprove\\": "src/"
+            "App\\": "src/"
         }
     },
     "authors": [
