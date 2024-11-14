@@ -1,40 +1,19 @@
 <?php
-
-namespace Ahiou\CinetechImprove\Models;
+namespace App\Models;
 
 class Movie {
-    private $id;
-    private $title;
-    private $tmdb_id;
-    private $poster_path;
-    private $overview;
-
-    public function __construct($data = []) {
-        if ($data) {
-            $this->hydrate($data);
-        }
+    public function getPopularMovies() {
+        $url = TMDB_API_BASE_URL . '/movie/popular?api_key=' . TMDB_API_KEY;
+        return $this->fetchData($url);
     }
 
-    public function hydrate($data) {
-        foreach ($data as $key => $value) {
-            $method = 'set' . ucfirst($key);
-            if (method_exists($this, $method)) {
-                $this->$method($value);
-            }
-        }
+    public function getMovieDetails($id) {
+        $url = TMDB_API_BASE_URL . "/movie/{$id}?api_key=" . TMDB_API_KEY . '&append_to_response=credits';
+        return $this->fetchData($url);
     }
 
-    // Getters
-    public function getId() { return $this->id; }
-    public function getTitle() { return $this->title; }
-    public function getTmdbId() { return $this->tmdb_id; }
-    public function getPosterPath() { return $this->poster_path; }
-    public function getOverview() { return $this->overview; }
-
-    // Setters
-    public function setId($id) { $this->id = $id; }
-    public function setTitle($title) { $this->title = $title; }
-    public function setTmdbId($tmdb_id) { $this->tmdb_id = $tmdb_id; }
-    public function setPosterPath($poster_path) { $this->poster_path = $poster_path; }
-    public function setOverview($overview) { $this->overview = $overview; }
-} 
+    private function fetchData($url) {
+        $response = file_get_contents($url);
+        return $response ? json_decode($response, true) : [];
+    }
+}
